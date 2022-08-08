@@ -84,6 +84,10 @@ helm upgrade postgres-operator postgres-operator-charts/postgres-operator --inst
 # Install Redis Operator
 helm repo add ot-helm https://ot-container-kit.github.io/helm-charts/
 helm upgrade redis-operator ot-helm/redis-operator --install --namespace operators --set resources.requests.cpu=20m --set resources.requests.memory=32Mi --wait
+
+# Install Metrics Server
+helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+helm upgrade --install metrics-server metrics-server/metrics-server --atomic --wait 
 ```
 
 ### Deploy Vault and Configure Secrets
