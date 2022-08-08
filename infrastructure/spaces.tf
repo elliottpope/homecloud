@@ -10,6 +10,10 @@ resource "random_uuid" "spaces_id" {}
 resource "digitalocean_spaces_bucket" "nextcloud" {
   name   = "nextcloud-${random_uuid.spaces_id.result}"
   region = var.digitalocean_spaces_region
+  cors_rule {
+    allowed_origins = [ "https://nextcloud.apps.${var.domain}" ]
+    allowed_methods = [ "GET", "PUT", "POST", "DELETE", "HEAD" ]
+  }
 }
 
 output "spaces_endpoint" {
