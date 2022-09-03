@@ -102,6 +102,21 @@ helm install elastic-operator elastic/eck-operator -n operators --set resources.
 kubectl apply -f elastic-monitoring.yaml
 ```
 
+### Integrate Flux (optional)
+
+#### Prerequisites
+
+1. This must be a Git repository hosted on GitHub
+2. You must have a Personal Access Token (PAT) with `repo` permissions and the user must be an admin of the target repo
+
+#### Bootstrap the Cluster
+
+```
+export GITHUB_TOKEN=
+
+flux bootstrap github --owner=my-github-username --repository=my-repository --personal
+```
+
 ### Deploy Vault and Configure Secrets
 ```
 kubectl apply -f vault.yaml
