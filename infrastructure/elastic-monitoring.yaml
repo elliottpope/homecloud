@@ -65,13 +65,16 @@ apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
   name: filebeat
+  namespace: monitoring
 spec:
   type: filebeat
   version: 8.3.1
   elasticsearchRef:
-    name: elasticsearch
+    name: elasticsearch-monitoring
+    namespace: monitoring
   kibanaRef:
-    name: kibana
+    name: kibana-monitoring
+    namespace: monitoring
   config:
     filebeat:
       autodiscover:
@@ -115,10 +118,10 @@ spec:
                   fieldPath: spec.nodeName
           resources:
             requests:
-              memory: 32Mi
+              memory: 256Mi
               cpu: 50m
             limits:
-              memory: 64Mi
+              memory: 256Mi
               cpu: 100M
         volumes:
         - name: varlogcontainers
@@ -150,7 +153,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: filebeat
-  namespace: default
+  namespace: monitoring
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -159,7 +162,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: filebeat
-  namespace: default
+  namespace: monitoring
 roleRef:
   kind: ClusterRole
   name: filebeat
@@ -169,13 +172,16 @@ apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
   name: metricbeat
+  namespace: monitoring
 spec:
   type: metricbeat
   version: 8.3.1
   elasticsearchRef:
-    name: elasticsearch
+    name: elasticsearch-monitoring
+    namespace: monitoring
   kibanaRef:
-    name: kibana
+    name: kibana-monitoring
+    namespace: monitoring
   config:
     metricbeat:
       autodiscover:
@@ -256,10 +262,10 @@ spec:
                 fieldPath: spec.nodeName
           resources:
             requests:
-              memory: 32Mi
+              memory: 256Mi
               cpu: 50m
             limits:
-              memory: 64Mi
+              memory: 256Mi
               cpu: 100M
         dnsPolicy: ClusterFirstWithHostNet
         hostNetwork: true # Allows to provide richer host metadata
@@ -328,7 +334,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: metricbeat
-  namespace: default
+  namespace: monitoring
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -337,7 +343,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: metricbeat
-  namespace: default
+  namespace: monitoring
 roleRef:
   kind: ClusterRole
   name: metricbeat
