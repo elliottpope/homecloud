@@ -11,7 +11,7 @@ spec:
     # Detail can reference: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container
     vault:
       requests:
-        memory: "64Mi"
+        memory: "128Mi"
         cpu: "20m"
       limits:
         memory: "256Mi"
