@@ -93,6 +93,13 @@ helm upgrade redis-operator ot-helm/redis-operator --install --namespace operato
 # Install Metrics Server
 helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 helm upgrade --install metrics-server metrics-server/metrics-server (--set args[0]="--kubelet-insecure-tls=true" --set args[1]="--kubelet-preferred-address-types=InternalIP") --atomic --wait 
+
+# Install Elastic Cloud Kubernetes 
+helm repo add elastic https://helm.elastic.co
+helm install elastic-operator elastic/eck-operator -n operators --set resources.requests.cpu=20m --set resources.requests.memory=32Mi --atomic --wait
+
+# Deploy ElasticSearch, Kibana, Filebeat for Docker logs, and Metricbeat for K8 metrics
+kubectl apply -f elastic-monitoring.yaml
 ```
 
 ### Deploy Vault and Configure Secrets
