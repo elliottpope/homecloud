@@ -47,7 +47,7 @@ kubectl apply -f lets-encrypt-issuers.yaml
 #helm repo add linkerd https://helm.linkerd.io/stable
 
 #helm install linkerd2 --set identity.externalCA=true linkerd/linkerd2
-linkerd install --identity-external-issuer=true | kubectl apply -f -
+linkerd install --identity-external-issuer=true (--set proxyInit.runAsRoot=true) | kubectl apply -f -
 ```
 
 ### Terraform DNS and DigitalOcean Spaces
@@ -58,6 +58,8 @@ export SPACES_SECRET_ACCESS_KEY=
 
 export CLOUDFLARE_API_TOKEN=
 
+export LINODE_TOKEN=
+
 
 # Create any external resources required by K8 cluster (i.e. AWS resources)
 cd infrastructure
@@ -66,6 +68,9 @@ export PUBLIC_IP=$(kubectl describe service ingress-nginx-controller -n ingress-
 terraform init
 terraform plan --var public_ip=${PUBLIC_IP} --var-file main.tfvars -out cluster.plan
 terraform apply cluster.plan
+
+terraform output -raw kubeconfig | base64 -d > ~/.kube/linode.kubeconfig
+chmod ug-r ~/.kube/linode.kubeconfig
 ```
 
 ### Create Namespaces, Certificate Issuers, and Operators
@@ -87,24 +92,28 @@ helm upgrade redis-operator ot-helm/redis-operator --install --namespace operato
 
 # Install Metrics Server
 helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-helm upgrade --install metrics-server metrics-server/metrics-server --atomic --wait 
+helm upgrade --install metrics-server metrics-server/metrics-server (--set args[0]="--kubelet-insecure-tls=true" --set args[1]="--kubelet-preferred-address-types=InternalIP") --atomic --wait 
 ```
 
 ### Deploy Vault and Configure Secrets
 ```
 kubectl apply -f vault.yaml
 
+export VAULT_TOKEN=$(kubectl get secret -n vault -o json vault-unseal-keys | jq -r '.data["vault-root"]' | base64 -d)
+
 # Add Redis password
-`vault kv add secret/redis PASSWORD=`
+`vault kv put secret/redis PASSWORD=`
 
 # Add Nextcloud Admin Creds
-`vault kv add secret/nextcloud/admin USERNAME= PASSWORD=`
+`kubectl exec -it -n vault vault-0 -c vault -- /bin/sh -c "VAULT_CACERT= VAULT_ADDR=http://127.0.0.1:8200 vault login ${VAULT_TOKEN} && VAULT_CACERT= VAULT_ADDR=http://127.0.0.1:8200 vault kv put secret/nextcloud/admin USERNAME= PASSWORD=`
 
 # Add Digital Ocean Spaces Access Keys
-`vault kv add secret/nextcloud/aws ACCESS_KEY=${SPACES_ACCESS_KEY_ID} SECRET_KEY=${SPACES_SECRET_ACCESS_KEY} BUCKET=$(terraform output -raw spaces_name) ENDPOINT=$(terraform output -raw spaces_endpoint)`
+`vault kv put secret/nextcloud/aws ACCESS_KEY=${SPACES_ACCESS_KEY_ID} SECRET_KEY=${SPACES_SECRET_ACCESS_KEY} BUCKET=$(terraform output -raw spaces_name) ENDPOINT=$(terraform output -raw spaces_endpoint)`
+# Or Linode 
+kubectl exec -it -n vault vault-0 -c vault -- /bin/sh -c "VAULT_CACERT= VAULT_ADDR=http://127.0.0.1:8200 vault login ${VAULT_TOKEN} && VAULT_CACERT= VAULT_ADDR=http://127.0.0.1:8200 vault kv put secret/nextcloud/aws ACCESS_KEY=$(terraform output -raw bucket_access_key) SECRET_KEY=$(terraform output -raw bucket_secret_key) BUCKET=$(terraform output -raw bucket_name) ENDPOINT=$(terraform output -raw bucket_endpoint) DOMAIN=$(terraform output -raw bucket_domain)"
 
 # Add domain name
-`vault kv add secret/domain DOMAIN=`
+`vault kv put secret/domain DOMAIN=`
 ```
 
 # Deploy Postgres and Redis
@@ -118,6 +127,5 @@ kubectl apply -f redis.yaml
 ### Deploy Nextcloud
 ```
 cd apps
-kubectl apply -f namespace.yaml
 kubectl apply -f nextcloud.yaml
 ```
