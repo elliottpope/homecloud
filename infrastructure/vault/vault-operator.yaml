@@ -1,0 +1,50 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: banzaicloud
+  namespace: operators
+spec:
+  interval: 1m
+  url: https://kubernetes-charts.banzaicloud.com
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vault-operator
+  namespace: operators
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: vault-operator
+      version: '1.16.0'
+      sourceRef:
+        kind: HelmRepository
+        name: banzaicloud
+        namespace: operators
+      interval: 1m
+  values:
+    resources:
+      requests:
+        memory: 32Mi
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vault-secrets-webhook
+  namespace: vault
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: vault-secrets-webhook
+      version: '1.16.0'
+      sourceRef:
+        kind: HelmRepository
+        name: banzaicloud
+        namespace: operators
+      interval: 1m
+  values:
+    resources:
+      requests:
+        memory: 32Mi

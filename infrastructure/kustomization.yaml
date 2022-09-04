@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - ingress
   - certificates
+  - vault
   - elastic-monitoring.yaml
   - namespace.yaml
   - database
-  - vault.yaml
