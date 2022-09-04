@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - postgres.yaml
   - redis.yaml
-  # TODO: add Helm releases for Postgres and Redis operators
+  - postgres-operator.yaml
+  - redis-operator.yaml
