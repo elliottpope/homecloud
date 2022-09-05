@@ -1,0 +1,30 @@
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana-monitoring
+  namespace: monitoring
+spec:
+  version: 8.4.1
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch-monitoring
+    namespace: monitoring
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        env:
+          - name: NODE_OPTIONS
+            value: "--max-old-space-size=300"
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 100m
+          limits:
+            memory: 768Mi
+            cpu: 200m

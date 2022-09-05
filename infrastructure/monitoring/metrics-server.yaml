@@ -1,0 +1,30 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: metrics-server
+  namespace: monitoring
+spec:
+  interval: 1m
+  url: https://kubernetes-sigs.github.io/metrics-server/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: metrics-server
+  namespace: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: metrics-server
+      version: '3.8.2'
+      sourceRef:
+        kind: HelmRepository
+        name: metrics-server
+        namespace: monitoring
+      interval: 1m
+  values:
+    args:
+    # Required for Linode Managed Kubernetes deploys
+    - --kubelet-insecure-tls=true
+    - --kubelet-preferred-address-types=InternalIP

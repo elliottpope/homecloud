@@ -4,6 +4,6 @@ resources:
   - ingress
   - certificates
   - vault
-  - elastic-monitoring.yaml
-  - namespace.yaml
+  - monitoring  
   - database
+  - namespace.yaml
