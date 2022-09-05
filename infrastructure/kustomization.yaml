@@ -6,4 +6,5 @@ resources:
   - vault
   - monitoring  
   - database
+  - mesh
   - namespace.yaml

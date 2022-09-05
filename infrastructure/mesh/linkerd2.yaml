@@ -1,0 +1,26 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: linkerd
+spec:
+  interval: 1m
+  url: https://helm.linkerd.io/stable
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: linkerd
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: linkerd2
+      version: '2.11.4'
+      sourceRef:
+        kind: HelmRepository
+        name: linkerd
+        namespace: linkerd
+      interval: 1m
+  values:
+    identity.issuer.scheme: kubernetes.io/tls
+    installNamespace: false
