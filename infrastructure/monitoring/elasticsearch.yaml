@@ -6,15 +6,15 @@ metadata:
   namespace: monitoring
 spec:
   version: 8.4.1
+  http:
+    tls: 
+      selfSignedCertificate:
+        disabled: true
   nodeSets:
   - name: default
     count: 1
     config:
       node.store.allow_mmap: false
-    http:
-      tls:
-        selfSignedCertificate:
-          disabled: true
     podTemplate:
       spec:
         containers:
