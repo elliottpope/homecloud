@@ -9,6 +9,7 @@ spec:
         branch: main
     secretRef:
       name: private-overlays-auth
+      namespace: flux-system
     url: ssh://github.com/elliottpope/homecloud-private
 
 ---
