@@ -7,4 +7,5 @@ resources:
   - monitoring  
   - database
   - mesh
+  - private-overlays.yaml
   - namespace.yaml
