@@ -3,5 +3,4 @@ kind: Kustomization
 resources:
   # - lets-encrypt-issuers.yaml
   # - self-signed-ca.yaml
-  # TODO: add HelmRelease for jetstack cert-manager
   - certificate-manager.yaml

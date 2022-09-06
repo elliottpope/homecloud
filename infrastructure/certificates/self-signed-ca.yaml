@@ -27,11 +27,6 @@ spec:
     kind: ClusterIssuer
     group: cert-manager.io
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: linkerd
----
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -39,18 +34,13 @@ metadata:
   namespace: linkerd
 spec:
   isCA: true
-  commonName: linkerd-trust-anchor
-  subject: 
-    organizations:
-      - "${DOMAIN}"
-    organizationalUnits:
-      - "apps.${DOMAIN}"
-  secretName: linkerd-trust-anchor
+  commonName: root.linkerd.cluster.local
+  secretName: linkerd-identity-trust-roots
   privateKey:
     algorithm: ECDSA
     size: 256
   issuerRef:
-    name: selfsigned-issuer
+    name: linkerd-self-signed-issuer
     kind: ClusterIssuer
     group: cert-manager.io
 ---
@@ -63,13 +53,13 @@ spec:
     secretName: root-secret
 ---
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: linkerd-trust-anchor
-  namespace: linkerd
+  namespace: cert-manager
 spec:
   ca:
-    secretName: linkerd-trust-anchor
+    secretName: linkerd-identity-trust-roots
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -93,3 +83,16 @@ spec:
   - crl sign
   - server auth
   - client auth
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: linkerd-identity-trust-roots
+spec:
+  sources:
+  - secret:
+      name: "linkerd-identity-trust-roots"
+      key: "ca.crt"
+  target:
+    configMap:
+      key: "ca-bundle.crt"
