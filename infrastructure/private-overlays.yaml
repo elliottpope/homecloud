@@ -9,7 +9,7 @@ spec:
         branch: main
     secretRef:
       name: private-overlays-auth
-    url: https://github.com/elliottpope/homecloud-private
+    url: ssh://github.com/elliottpope/homecloud-private
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
