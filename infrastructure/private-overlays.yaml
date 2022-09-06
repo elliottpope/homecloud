@@ -1,0 +1,64 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+    name: private-overlays
+    namespace: flux-system
+spec:
+    interval: 1m0s
+    ref:
+        branch: main
+    secretRef:
+      name: private-overlays-auth
+    url: https://github.com/elliottpope/homecloud-private
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+    name: private-overlays
+    namespace: flux-system
+spec:
+    interval: 1m0s
+    path: ./
+    prune: false
+    serviceAccountName: default
+    sourceRef:
+        kind: GitRepository
+        name: private-overlays
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: private-overlays-auth
+    namespace: flux-system
+stringData:
+    identity: ENC[AES256_GCM,data:iza6Lx5ysBPaPLehBK0y7Arxfp0W6JvfkHAFXjcmjfEtIZnRSHzT7QvnM8X+WuCuW/O6ByatP8Sgj7kUjE4cYEG+NfwWrQG/jzwtlxFaiPQ2W+zIUWA3MracG33WSuN4XiWcKYJEJJmwDGL1jO0LTqdIrhCb3j5FWHnjrnuCfwd36m6yivqEmhYAvanCMHX5vnKlfY6204VhPZGDn8soOz87KWGiW5unYgL4pHD8hBu/QSgIOGX1Dj9xoCDMhe7NrJr+Fao5eAD7ypzQScULnge5Fvq4v9c4EtasFMntrDXlB/tsmx+AQsFO4CdY7ncxlVpn+PVgKkJPsLHBfUyWltqeX78pwYTDXgTfXp3+zR6mzfpQw5Ah07XGCHuQOVXltEeweEKGKw61Myx1KSawFgsy,iv:aksGSCe1z447IxMn/B3vRq0eZBYzlwSpz8tiBEdba+c=,tag:q1awZ/UrSaWsjRi4M7ON+A==,type:str]
+    identity.pub: ENC[AES256_GCM,data:YTQ/ZvF8TDy03TxHIgNcV4CMdxgT6/EUMdiW17ftyeuHPOuZCAN+eZvD7nx3W6mfrw9KDe8JFluZrzhF0UF8+X8D6lCuV7ovkwXZXEOSrYRO5CAWdAL33Q2MXq+ienV6N19F90vWvRXvRP/XS94cPgF+f9hw2ewmH9wzAl1G1RWDWxOxZKuM/ROfbRmbNbLMab56VBanouZIffGIINqqk3QDbIAcI+qneZBzPgjFh1gm6yMznQ1OLaqlrS0FJXtnDY1VYgi9rQUtcKkscA==,iv:7DsGHQxk4sgZObhrKnvz07MorbCrXEemKybMQ/1pnnU=,tag:Fl3F8Bgc78TYbQWRMWmzqw==,type:str]
+    known_hosts: ENC[AES256_GCM,data:hGoACNKVdUXRGnVPnV80AAlIFoCxvFLoUd/FwKOddznqXdTZbyCH/VIVkeHcwo3sUd1dWQDzIoVapHUyUczFGMd1YbqLVmHmlwzwkr3hmjpdFm6+qNIH3AfqHyYiH8S+FzLMSeyuySvow+3ED7lFoWR2tr1mbae81GyCmKQvEnq9m82oETPASZSVN8iaSjEGV+owx8epMM0aiq9KYdvb1MAA41/zrFBvHZfn,iv:SbtvrHY9t+VFSGWmdQ9zUtjDTE7AJPg9JLAocnWPKVk=,tag:OfflEjzT+PGjcgKl1B27/g==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    lastmodified: '2022-09-06T14:56:19Z'
+    mac: ENC[AES256_GCM,data:PUYgrgDZ/xT2Y5sPuB5F4uob99i/teE6wlicEXIky+3tFeOP4VophPqiSPnSau203mvX2T2RrVJD1kr/FYy2CO/m8lT9/dQ5B7+La+h2JRz41JxKxSwGPW5HfDzQtyIrLuybiQJau1i/6MdLHoqbFK8oH8T2jGwbfUU9OQGZhLo=,iv:t41BWrMGMhudssZORox8DkAZy6qOFkNI9XPeg1YWKnY=,tag:yKV/6lA6oxC3mtffZPOi2A==,type:str]
+    pgp:
+    -   created_at: '2022-09-06T14:56:19Z'
+        enc: |
+            -----BEGIN PGP MESSAGE-----
+
+            hQGMA225FJMW7rByAQwAyyvgrfhirpL8Yk2SvWSX4fkcrFU0/af+zjPfQMlzd6mE
+            s8L+oh7siHi4AUE64qIUplQMHUeX0HBKD4pUIoglLJdiCrE5kjyh57GrvLieIVyp
+            zcPCUtojBukBTSl85C3DE9FA8/R6HlhRZ6zc0iJP5xryAj1LXQeJI57YsjV+DfLz
+            sIqZqfJe7SYLvK4IV7AMoiK9QprUHXaNhgiV3w6GpckT6Bus4gVTLavLZI7ybPkO
+            Azw+8Id0n+nyB4+tW5AM1UT1k8mZiaNsskGwgqmiYplDJgKyMCywAsmQ9tZ4uCc/
+            MMMZjoI9dTgWE9qLkxD1UM6uIqOE8TbNRjyvn6jW9HJ30a89qtDBvkaDnPAHRwkM
+            MhYEKqe3m3IWSJEqCdZHpvdgr5VtrhIppra9lmBIpj6XHQVp0s6zdgM5dRGMsmKN
+            cVzGx1yGe9LDXFIrmVrRNP7e7xB9PmfjmPjOGs/0TYrUEPOkbEpirmtYBT03kZ9r
+            xXycVl0Jx5DoCkULUC590l4Beebgs3vEp4j4Ny64LNvddF3Sug7Go+VaSg+LEbFW
+            qJ8x6nKXe3Ee71sX03NJ+Gyfhm+qYeG/NQa6VdnNrJTxoG/SvRFmt/bqdJ69Ke5C
+            rTSlxDwv/Z2inrGq2pRt
+            =iKl4
+            -----END PGP MESSAGE-----
+        fp: 604A40DF4375A421DA613A22D736B043D8873683
+    encrypted_regex: ^(data|stringData)$
+    version: 3.4.0
