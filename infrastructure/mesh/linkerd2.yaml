@@ -26,6 +26,6 @@ spec:
   values:
     identity:
       externalCA: true
-      issuer.scheme: kubernetes.io/tls
+      issuer.scheme: 'kubernetes.io/tls'
     installNamespace: false
     proxyInit.runAsRoot: true
