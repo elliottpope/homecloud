@@ -10,11 +10,11 @@ kind: Kustomization
 metadata:
   name: private-overlays
   namespace: flux-system
+decryption:
+  provider: sops
+  secretRef:
+    name: sops-gpg
 spec:
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-gpg
   interval: 5m0s
   path: ./
   prune: true
