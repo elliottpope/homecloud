@@ -4,21 +4,5 @@ resources:
   - infrastructure
   - flux-system
   # - apps
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: private-overlays
-  namespace: flux-system
-decryption:
-  provider: sops
-  secretRef:
-    name: sops-gpg
-spec:
-  interval: 5m0s
-  path: ./
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
+
 
