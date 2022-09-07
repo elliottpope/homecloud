@@ -40,6 +40,8 @@ metadata:
     name: private-overlays
     namespace: flux-system
 spec:
+    dependsOn:
+    - name: flux-system
     interval: 1m0s
     path: ./
     prune: false
