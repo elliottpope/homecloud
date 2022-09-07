@@ -24,7 +24,10 @@ spec:
         namespace: linkerd
       interval: 1m
   values:
-    identity.externalCA: true
-    identity.issuer.scheme: 'kubernetes.io/tls'
+    identity:
+      externalCA: true
+      issuer:
+        scheme: 'kubernetes.io/tls'
     installNamespace: false
-    proxyInit.runAsRoot: true
+    proxyInit:
+      runAsRoot: true
