@@ -33,18 +33,3 @@ subjects:
 - kind: ServiceAccount
   name: private-overlays
   namespace: flux-system
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-    name: private-overlays
-    namespace: flux-system
-spec:
-    interval: 1m0s
-    path: ./
-    prune: false
-    serviceAccountName: private-overlays
-    sourceRef:
-        kind: GitRepository
-        name: private-overlays
-        namespace: flux-system

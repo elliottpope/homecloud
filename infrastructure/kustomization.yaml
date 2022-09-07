@@ -7,6 +7,5 @@ resources:
   - monitoring  
   - database
   - mesh
+  - private-overlays
   - namespace.yaml
-patchesStrategicMerge:
-  - private-overlays.yaml
