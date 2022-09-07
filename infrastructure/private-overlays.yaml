@@ -33,6 +33,29 @@ subjects:
 - kind: ServiceAccount
   name: private-overlays
   namespace: flux-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: cert-issuer-updater
+  namespace: cert-manager
+rules:
+- apiGroups: ["cert-manager.io"]
+  resources: ["certificates"]
+  verbs: ["get", "list", "watch", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: private-overlays-cert-updater
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cert-issuer-updater
+subjects:
+- kind: ServiceAccount
+  name: private-overlays
+  namespace: flux-system
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
