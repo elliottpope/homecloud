@@ -61,6 +61,8 @@ flux -n flux-system create secret git private-overlays-auth --url=ssh://git@gith
 
 yq e '.stringData."identity.pub"' private-overlays-ssh.yaml > private-overlays-ssh.pub
 gh repo deploy-key add private-overlays-ssh.pub -R elliottpope/homecloud-private
+
+
 ```
 
 ### Deploy Vault and Configure Secrets

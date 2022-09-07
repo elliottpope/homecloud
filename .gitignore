@@ -2,3 +2,5 @@
 .terraform*
 *.plan
 *.tfvars
+*-ssh.pub
+*-ssh.yaml
