@@ -49,4 +49,3 @@ spec:
     sourceRef:
         kind: GitRepository
         name: private-overlays
-        namespace: flux-system
