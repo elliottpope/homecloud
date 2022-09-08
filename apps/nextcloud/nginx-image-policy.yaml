@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   filterTags:
-    extract: ""
+    extract: "$version"
     pattern: (?P<version>.*)-alpine
   imageRepositoryRef:
     name: nginx
