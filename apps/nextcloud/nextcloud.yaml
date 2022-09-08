@@ -78,7 +78,7 @@ spec:
         - name: nextcloud-data
           mountPath: /var/www/html
       - name: frontend
-        image: nginx:1.21.6-alpine
+        image: nginx:1.21.6-alpine # {"$imagepolicy": "flux-system:nginx"}
         ports: 
         - containerPort: 80
         resources:

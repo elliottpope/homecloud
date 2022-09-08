@@ -4,3 +4,5 @@ resources:
   - nextcloud.yaml
   - nextcloud-image-repo.yaml
   - nextcloud-image-policy.yaml
+  - nginx-image-repo.yaml
+  - nginx-image-policy.yaml

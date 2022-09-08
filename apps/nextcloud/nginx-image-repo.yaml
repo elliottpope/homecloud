@@ -1,0 +1,10 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: nginx
+  namespace: flux-system
+spec:
+  image: nginx
+  interval: 1m0s
+
