@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   filterTags:
-    extract: version
+    extract: $version
     pattern: (?P<version>.*)-fpm-alpine
   imageRepositoryRef:
     name: nextcloud
