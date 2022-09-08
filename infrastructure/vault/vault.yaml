@@ -5,7 +5,7 @@ metadata:
   namespace: vault
 spec:
   size: 1
-  image: vault:1.11.0
+  image: vault:1.11.0 # {"$imagepolicy": "flux-system:vault"}
   resources:
     # A YAML representation of resource ResourceRequirements for vault container
     # Detail can reference: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container
@@ -149,6 +149,14 @@ spec:
         description: General secrets.
         options:
           version: 2
+      - type: transit
+        path: transit/kubernetes
+        description: Transit engine for encrypting Kubernetes secrets (for Flux repositories)
+        configuration:
+          keys:
+            - name: sops
+              type: aes256-gcm96
+              exportable: false
       # TODO: set up PostgreSQL DB backend for Nextcloud DB
 
   vaultEnvsConfig:

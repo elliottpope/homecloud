@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - vault.yaml
   - vault-operator.yaml
+  - vault-image-repo.yaml
+  - vault-image-policy.yaml
