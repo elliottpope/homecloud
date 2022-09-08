@@ -7,7 +7,7 @@ metadata:
 spec:
   filterTags:
     extract: "$version"
-    pattern: (?P<version>.*)-alpine
+    pattern: (?P<version>.*)-alpine$
   imageRepositoryRef:
     name: nginx
   policy:
