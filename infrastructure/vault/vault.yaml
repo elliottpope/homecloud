@@ -5,7 +5,7 @@ metadata:
   namespace: vault
 spec:
   size: 1
-  image: vault:1.11.0 # {"$imagepolicy": "flux-system:vault"}
+  image: vault:1.11.3 # {"$imagepolicy": "flux-system:vault"}
   resources:
     # A YAML representation of resource ResourceRequirements for vault container
     # Detail can reference: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container
@@ -16,7 +16,6 @@ spec:
       limits:
         memory: "256Mi"
         cpu: "100m"
-
     # A YAML representation of resource ResourceRequirements for bank-vaults container
     bankVaults:
       requests:
@@ -25,7 +24,6 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "50m"
-
     # A YAML representation of resource ResourceRequirements for prometheus-exporter container
     prometheusExporter:
       requests:
@@ -34,39 +32,30 @@ spec:
       limits:
         memory: "32Mi"
         cpu: "50m"
-
   # Vault Pods , Services and TLS Secret annotations
   vaultAnnotations:
     type/instance: "vault"
-
   # Vault Configurer Pods and Services annotations
   vaultConfigurerAnnotations:
     type/instance: "vaultconfigurer"
-
   # Vault Pods , Services and TLS Secret labels
   vaultLabels:
     example.com/log-format: "json"
-
   # Vault Configurer Pods and Services labels
   vaultConfigurerLabels:
     example.com/log-format: "string"
-
   serviceAccount: vault
   serviceType: ClusterIP
-
   # Specify existing secret contains TLS certificate (accepted secret type: kubernetes.io/tls)
   # If it is set, generating certificate will be disabled
   # existingTlsSecretName: vault-tls
-
   volumes:
     - name: vault-file
       persistentVolumeClaim:
         claimName: vault-file
-
   volumeMounts:
     - name: vault-file
       mountPath: /vault/file
-
   # TODO: store unseal keys in DigitalOcean Spaces
   # Describe where you would like to store the Vault unseal keys and root token.
   unsealConfig:
@@ -79,7 +68,6 @@ spec:
       storeRootToken: true
     kubernetes:
       secretNamespace: vault
-
   # A YAML representation of a final vault config file.
   # See https://www.vaultproject.io/docs/configuration/ for more information.
   config:
@@ -92,7 +80,6 @@ spec:
         # Uncommenting the following line and deleting tls_cert_file and tls_key_file disables TLS
         tls_disable: true
     ui: true
-
   # See: https://banzaicloud.com/docs/bank-vaults/cli-tool/#example-external-vault-configuration
   # The repository also contains a lot examples in the deploy/ and operator/deploy directories.
   externalConfig:
@@ -100,24 +87,11 @@ spec:
       enabled: true
     policies:
       - name: allow_secrets
-        rules: path "secret/*" {
-          capabilities = ["create", "read", "update", "delete", "list"]
-          }
+        rules: path "secret/*" { capabilities = ["create", "read", "update", "delete", "list"] }
       - name: allow_nextcloud
-        rules: path "secret/data/nextcloud/*" {
-          capabilities = ["read", "list"]
-          }
-          path "secret/data/redis" {
-          capabilities = ["read", "list"]
-          }
-          path "secret/data/domain" {
-          capabilities = ["read", "list"]
-          }
+        rules: path "secret/data/nextcloud/*" { capabilities = ["read", "list"] } path "secret/data/redis" { capabilities = ["read", "list"] } path "secret/data/domain" { capabilities = ["read", "list"] }
       - name: allow_dbs
-        rules: path "secret/data/redis" {
-          capabilities = ["read", "list"]
-          }
-
+        rules: path "secret/data/redis" { capabilities = ["read", "list"] }
     auth:
       - type: kubernetes
         roles:
@@ -141,8 +115,6 @@ spec:
             policies:
               - allow_secrets
             ttl: 1h
-
-
     secrets:
       - path: secret
         type: kv
@@ -157,18 +129,15 @@ spec:
             - name: sops
               type: aes256-gcm96
               exportable: false
-      # TODO: set up PostgreSQL DB backend for Nextcloud DB
-
+    # TODO: set up PostgreSQL DB backend for Nextcloud DB
   vaultEnvsConfig:
     - name: VAULT_LOG_LEVEL
       value: debug
     - name: VAULT_STORAGE_FILE
       value: "/vault/file"
     - name: VAULT_CACERT
-      value: /vault/userconfig/vault-tls/ca.crt   
-
+      value: /vault/userconfig/vault-tls/ca.crt
   istioEnabled: false
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -183,14 +152,12 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
 ---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: vault
   namespace: vault
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -205,7 +172,6 @@ rules:
     resources: ["pods"]
     verbs: ["get", "update", "patch"]
 ---
-
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -219,9 +185,7 @@ subjects:
   - kind: ServiceAccount
     name: vault
     namespace: vault
-
 ---
-
 # This binding allows the deployed Vault instance to authenticate clients
 # through Kubernetes ServiceAccounts (if configured so).
 apiVersion: rbac.authorization.k8s.io/v1
