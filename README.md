@@ -73,6 +73,9 @@ TODO: add details for HashiCorp Vault Transit & SOPS encryption of SSH key
 ```
 export VAULT_TOKEN=$(kubectl get secret -n vault -o json vault-unseal-keys | jq -r '.data["vault-root"]' | base64 -d)
 
+# Add Vault token to enable SOPS encryption 
+echo $VAULT_TOKEN | kubectl create secret generic sops-vault --namespace=flux-system --from-file=sops.vault-token=/dev/stdin
+
 # Add Redis password
 `vault kv put secret/redis PASSWORD=`
 
