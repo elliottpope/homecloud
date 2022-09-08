@@ -43,10 +43,12 @@ chmod ug-r ~/.kube/linode.kubeconfig
 ```
 export GITHUB_TOKEN=
 
-flux bootstrap github --owner=my-github-username --repository=my-repository --personal
+flux bootstrap github --components-extra=image-reflector-controller,image-automation-controller --owner=elliottpope --repository=homecloud --branch=main --path=./ --read-write-key --personal
 ```
 
 #### Generate the Flux GPG Key for Sealed Secrets
+
+TODO: swap out with Vault Transit encryption
 
 ```
 gpg ...
@@ -65,7 +67,9 @@ gh repo deploy-key add private-overlays-ssh.pub -R elliottpope/homecloud-private
 
 ```
 
-### Deploy Vault and Configure Secrets
+TODO: add details for HashiCorp Vault Transit & SOPS encryption of SSH key
+
+### Configure Secrets
 ```
 export VAULT_TOKEN=$(kubectl get secret -n vault -o json vault-unseal-keys | jq -r '.data["vault-root"]' | base64 -d)
 
