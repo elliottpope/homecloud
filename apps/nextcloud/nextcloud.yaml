@@ -34,7 +34,7 @@ spec:
           requests:
             cpu: 250m
             memory: 256Mi
-          limits: 
+          limits:
             cpu: 500m
             memory: 512Mi
         env:
@@ -63,9 +63,9 @@ spec:
         - name: NEXTCLOUD_TRUSTED_DOMAINS
           value: "vault:secret/data/domain#nextcloud.apps.${.DOMAIN} www.nextcloud.apps.${.DOMAIN}"
         - name: OBJECTSTORE_S3_HOST
-          value: "vault:secret/data/nextcloud/aws#DOMAIN" 
+          value: "vault:secret/data/nextcloud/aws#DOMAIN"
         - name: OBJECTSTORE_S3_BUCKET
-          value: "vault:secret/data/nextcloud/aws#BUCKET" 
+          value: "vault:secret/data/nextcloud/aws#BUCKET"
         - name: OBJECTSTORE_S3_SSL
           value: "true"
         - name: OBJECTSTORE_S3_KEY
@@ -78,8 +78,8 @@ spec:
         - name: nextcloud-data
           mountPath: /var/www/html
       - name: frontend
-        image: nginx:1.21.6-alpine # {"$imagepolicy": "flux-system:nginx"}
-        ports: 
+        image: nginx:1.23.1-alpine # {"$imagepolicy": "flux-system:nginx"}
+        ports:
         - containerPort: 80
         resources:
           requests:
@@ -96,7 +96,7 @@ spec:
         - name: nextcloud-data
           mountPath: /var/www/html
           readOnly: true
-      volumes: 
+      volumes:
       - name: nginx-conf
         configMap:
           name: nextcloud-nginx-conf
@@ -104,7 +104,7 @@ spec:
   - metadata:
       name: nextcloud-data
     spec:
-      accessModes: 
+      accessModes:
       - "ReadWriteOnce"
       resources:
         requests:
