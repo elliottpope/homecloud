@@ -27,7 +27,7 @@ spec:
       serviceAccountName: nextcloud
       containers:
       - name: nextcloud
-        image: nextcloud:24.0.4-fpm-alpine # {"$imagepolicy": "flux-system:nextcloud"}
+        image: nextcloud:24.0.5-fpm-alpine # {"$imagepolicy": "flux-system:nextcloud"}
         ports:
         - containerPort: 9000
         resources:
