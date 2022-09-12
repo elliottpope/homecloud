@@ -1,4 +1,4 @@
-# Personal DigitalOcean K8 Cluster
+# Personal K8 Cluster
 
 ## Prerequisites
 
