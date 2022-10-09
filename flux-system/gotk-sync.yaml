@@ -46,7 +46,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - cluster
+    - name: cluster
   interval: 10m0s
   path: ./infrastructure
   prune: true
@@ -61,7 +61,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-  - infrastructure
+  - name: infrastructure
   interval: 10m0s
   path: ./apps
   prune: true
