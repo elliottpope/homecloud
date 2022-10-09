@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - certificates
-  - datbase
+  - database
   - ingress
   - mesh
   - monitoring
