@@ -5,7 +5,7 @@ metadata:
   namespace: vault
 spec:
   size: 1
-  image: vault:1.11.3 # {"$imagepolicy": "flux-system:vault"}
+  image: vault:1.12.0 # {"$imagepolicy": "flux-system:vault"}
   resources:
     # A YAML representation of resource ResourceRequirements for vault container
     # Detail can reference: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container
@@ -129,7 +129,7 @@ spec:
             - name: sops
               type: aes256-gcm96
               exportable: false
-    # TODO: set up PostgreSQL DB backend for Nextcloud DB
+              # TODO: set up PostgreSQL DB backend for Nextcloud DB
   vaultEnvsConfig:
     - name: VAULT_LOG_LEVEL
       value: debug
